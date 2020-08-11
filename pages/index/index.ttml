@@ -13,5 +13,6 @@
         <p>{{bottle.contents}}</p>
           <input type="text" placeholder="输入评论" bindinput='bindComment'/>
     </view>
+    <button  type="default" bindtap="throwBottle">扔回大海</button>
   </view>
 </view>

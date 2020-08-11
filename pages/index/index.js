@@ -9,7 +9,7 @@ Page({
       content: ''  //内容
     },
     commentValue: '',//评论
-    bottle: {}
+    bottle: {}      //漂流瓶信息
 
   },
   onLoad: function () {
@@ -92,7 +92,7 @@ Page({
   dopagetoutiaoUpdateNickname: function (id, userData) {
     return new Promise((resolve, reject) => {
       tt.request({
-        url: `${URL.hostUrl}/api/Wxapps/dopagetoutiaoUpdateNickname`, // 目标服务器url
+        url: `${URL.hostUrl}/api/Wxapps/dopagetoutiaoUpdateNickname`,
         data: {
           nickname: userData.userInfo.nickName,
           id: id,
@@ -211,7 +211,7 @@ Page({
     });
   },
 
-  // 获取打捞列表
+  // 获取我的打捞列表
   getBottleList () {
     tt.request({
       url: `${URL.hostUrl}/api/Floating/getMyPlpSalvageList`,
@@ -229,5 +229,62 @@ Page({
         reject(err)
       }
     });
+  },
+
+
+  //获取评论列表
+  getCommentList () {
+    tt.request({
+      url: `${URL.hostUrl}/api/Floating/getPlpComment`,
+      method: 'POST',
+      data: {
+        user_id: this.data.userId,
+        uniacid: GLOBAL.uniacid
+      },
+      success: (res) => {
+        if (res.data.code == 0) {
+
+        }
+      }
+    });
+  },
+
+  //我的漂流瓶被人回复了
+  getMyReply () {
+    tt.request({
+      url: `${URL.hostUrl}/api/Floating/getMyReply`,
+      method: 'POST',
+      data: {
+        user_id: this.data.userId,
+        uniacid: GLOBAL.uniacid
+      },
+      success: (res) => {
+        if (res.data.code == 0) {
+
+        }
+      }
+    });
+  },
+  /** 把漂流瓶扔回大海
+   *  uniacid: 后台小程序ID
+      dynamic_id:当前漂流瓶ID
+      user_id：用户ID
+   */
+  throwBottle () {
+    tt.request({
+      url: `${URL.hostUrl}/api/Floating/getMyReply/throwbackSea`,
+      method: 'POST',
+      data: {
+        user_id: this.data.userId,
+        dynamic_id: this.data.bottle.id,
+        uniacid: GLOBAL.uniacid
+      },
+      success: (res) => {
+        if (res.data.code == 0) {
+
+        }
+      }
+    });
   }
+
 })
