@@ -120,7 +120,9 @@ Page({
   },
 
   /**
-   * 更改用户名
+   *  更改用户昵称
+   * @param {*用户userid} id
+   * @param {*用户信息} userData
    */
   dopagetoutiaoUpdateNickname: function (id, userData) {
     return new Promise((resolve, reject) => {
@@ -135,6 +137,7 @@ Page({
         },
         success: (res3) => {
           console.log('res3', res3);
+          resolve(res3)
         },
         fail: (err) => {
           reject(err)
