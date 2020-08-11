@@ -13,29 +13,7 @@ Page({
 
   },
   onLoad: function () {
-
-    this.getLoginCode()
-      .then(res => {
-        return this.getUserId(res);
-      })
-      .then((res1) => {
-
-        return this.getUserInfo(res1);
-      })
-      .then((res2) => {
-        console.log('22', res2)
-        let id = res2[0].data.data.res
-        this.data.userId = id
-        this.getBottleList()
-
-        return this.dopagetoutiaoUpdateNickname(id, res2[1]);
-      }).then(res3 => {
-        console.log('res3', res3)
-        console.log('this', this);
-        // 获取打捞列表
-      })
-
-
+    this.Synchronize()
   },
 
 
@@ -46,8 +24,6 @@ Page({
     return new Promise((resolve, reject) => {
       tt.login({
         success (res) {
-          console.log(`login调用成功${res.code} ${res.anonymousCode}`);
-          console.log('resss', res)
           resolve(res)
         },
         fail (err) {
@@ -66,7 +42,6 @@ Page({
    */
   getUserId (res) {
     return new Promise((resolve, reject) => {
-      console.log('ces', res);
       tt.request({
         url: `${URL.hostUrl}/api/Wxapps/dopagetoutiaologin`,
         data: {
@@ -78,9 +53,6 @@ Page({
           "content-type": "application/json",
         },
         success (res1) {
-          console.log('res111111111111', res1.data.data.res);
-          console.log('res1', res1.data.data);
-          console.log(`request调用成功11111111111 ${JSON.stringify(res1)}`);
           resolve(res1);
 
         },
@@ -98,18 +70,11 @@ Page({
   /**
    * 通过userId拉起授权窗口
    */
-  getUserInfo: function (res1) {
+  getUserInfo: function () {
     return new Promise((resolve, reject) => {
       tt.getUserInfo({
         success: function (res2) {
-          // var data = {
-          //   nickname: res2.userInfo.nickName,
-          //   id: res1.data.data.id,
-          //   avator: res2.userInfo.avatarUrl
-          // }
-          console.log('res1', res1)
-          console.log('res2', res2)
-          resolve([res1, res2]);
+          resolve(res2)
         },
         fail: function (err) {
           reject(err);
@@ -126,7 +91,6 @@ Page({
    */
   dopagetoutiaoUpdateNickname: function (id, userData) {
     return new Promise((resolve, reject) => {
-      console.log('userData', userData)
       tt.request({
         url: `${URL.hostUrl}/api/Wxapps/dopagetoutiaoUpdateNickname`, // 目标服务器url
         data: {
@@ -136,7 +100,6 @@ Page({
           avator: userData.userInfo.avatarUrl
         },
         success: (res3) => {
-          console.log('res3', res3);
           resolve(res3)
         },
         fail: (err) => {
@@ -144,6 +107,14 @@ Page({
         }
       });
     })
+  },
+
+  // 异步请求同步执行
+  async Synchronize () {
+    const _getLoginCode = await this.getLoginCode()
+    const _getUserId = await this.getUserId(_getLoginCode)
+    const _getUserInfo = await this.getUserInfo()
+    await this.dopagetoutiaoUpdateNickname(_getUserId.data.data.res, _getUserInfo)
   },
 
   /**
@@ -179,7 +150,6 @@ Page({
    * 发布标题
    */
   bindTitle (e) {
-    console.log('e', e.detail.value);
     this.data.form.title = e.detail.value
   },
   /**
@@ -187,7 +157,6 @@ Page({
    * 发布内容
    */
   bindContent (e) {
-    console.log('e', e.detail.value);
     this.data.form.content = e.detail.value
   },
   /**
@@ -209,7 +178,7 @@ Page({
       },
       success: (res) => {
         if (res.data.code == 0) {
-          console.log('res', res);
+          // console.log('res', res);
           this.setData({
             bottle: res.data.data
           })
@@ -233,7 +202,7 @@ Page({
       },
       success: (res) => {
         if (res.data.code == 0) {
-          console.log('res', res);
+          // console.log('res', res);
         }
       },
       fail: (err) => {
@@ -253,7 +222,7 @@ Page({
       },
       success: (res) => {
         if (res.data.code == 0) {
-          console.log('res', res);
+          // console.log('res', res);
         }
       },
       fail: (err) => {
