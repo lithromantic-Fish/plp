@@ -8,8 +8,10 @@ Page({
       title: '',  //标题
       content: ''  //内容
     },
-    commentValue: '',//评论
-    bottle: {}      //漂流瓶信息
+    pickList: [],     //打捞列表
+    commentList: [],   //评论列表
+    commentValue: '', //评论
+    bottle: {}        //漂流瓶信息
 
   },
   onLoad: function () {
@@ -163,7 +165,7 @@ Page({
    * 评论打捞的漂流瓶内容
    */
 
-  bindComment () {
+  bindComment (e) {
     this.data.commentValue = e.detail.value
   },
 
@@ -192,17 +194,33 @@ Page({
 
   // 评论打捞的漂流瓶
   commentBottle () {
+    if (!this.data.commentValue) {
+      tt.showToast({
+        title: '评论不能为空', // 内容
+        success: (res) => {
+
+        }
+      });
+      return
+    }
+    console.log('this.data.bottle', this.data.bottle);
     tt.request({
       url: `${URL.hostUrl}/api/Floating/plpComment`,
       method: 'POST',
       data: {
         comment_user_id: this.data.bottle.user_id,
+        orgin_id: this.data.bottle.id,
         uniacid: GLOBAL.uniacid,
-        orgin_id: this.data.bottle.id
+        comment_content: this.data.commentValue,
       },
       success: (res) => {
         if (res.data.code == 0) {
-          // console.log('res', res);
+          tt.showToast({
+            title: '评论成功', // 内容
+            success: (res) => {
+
+            }
+          });
         }
       },
       fail: (err) => {
@@ -223,6 +241,9 @@ Page({
       success: (res) => {
         if (res.data.code == 0) {
           // console.log('res', res);
+          this.setData({
+            pickList: res.data.data
+          })
         }
       },
       fail: (err) => {
@@ -243,7 +264,10 @@ Page({
       },
       success: (res) => {
         if (res.data.code == 0) {
-
+          this.setData({
+            commentList: res.data.data
+          })
+          console.log(this.data.commentList);
         }
       }
     });

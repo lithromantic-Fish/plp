@@ -13,6 +13,31 @@
         <p>{{bottle.contents}}</p>
           <input type="text" placeholder="输入评论" bindinput='bindComment'/>
     </view>
+    <button type="default" bindtap="commentBottle">评论</button>
+    <button type="default" bindtap="getCommentList">获取我的评论列表</button>
+      <view class="commentList" tt:for="{{commentList}}"  tt:for-item="item"  tt:if="{{commentList.length!==0}}">
+        <view>
+            <p>{{item.nickname}}</p>
+            <p>{{item.title}}</p>
+            <p>{{item.contents}}</p>
+        </view>
+      </view>
+
+        <view tt:if="{{commentList.length==0}}">
+          <p>评论暂无数据</p>
+        </view>
+    </view>
+    <button type="default" bindtap="getBottleList">获取我的打捞列表</button>
+    <view class="pickList" tt:for="{{pickList}}"  tt:for-item="item" tt:if="{{pickList.length!==0}}">
+        <view >
+            <p>{{item.nickname}}</p>
+            <p>{{item.title}}</p>
+            <p>{{item.contents}}</p>
+        </view>
+    </view>
+        <view tt:else="{{pickList.length==0}}">
+          <p>打捞列表暂无数据</p>
+        </view>
     <button  type="default" bindtap="throwBottle">扔回大海</button>
   </view>
 </view>
