@@ -249,7 +249,7 @@ Page({
     });
   },
 
-  //我的漂流瓶被人回复了
+  //我发布的漂流瓶列表
   getMyReply () {
     tt.request({
       url: `${URL.hostUrl}/api/Floating/getMyReply`,
