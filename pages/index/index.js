@@ -43,6 +43,7 @@ Page({
    * 获取用户id
    */
   getUserId (res) {
+    var that = this
     return new Promise((resolve, reject) => {
       tt.request({
         url: `${URL.hostUrl}/api/Wxapps/dopagetoutiaologin`,
@@ -55,14 +56,21 @@ Page({
           "content-type": "application/json",
         },
         success (res1) {
-          resolve(res1);
 
+          that.setData({
+            userId: res1.data.data.res
+          })
+          resolve(res1);
+          console.log('获取userid', res1);
         },
         fail (err) {
           console.log(`request调用失败`);
           reject(err)
 
         },
+        complate (c) {
+          console.log('c', c);
+        }
       })
 
 
@@ -76,6 +84,7 @@ Page({
     return new Promise((resolve, reject) => {
       tt.getUserInfo({
         success: function (res2) {
+          console.log('获取的用户信息', res2);
           resolve(res2)
         },
         fail: function (err) {
@@ -114,8 +123,11 @@ Page({
   // 异步请求同步执行
   async Synchronize () {
     const _getLoginCode = await this.getLoginCode()
+    console.log('_getLoginCode', _getLoginCode);
     const _getUserId = await this.getUserId(_getLoginCode)
+    console.log('_getUserId', _getUserId);
     const _getUserInfo = await this.getUserInfo()
+    console.log('_getUserInfo', _getUserInfo);
     await this.dopagetoutiaoUpdateNickname(_getUserId.data.data.res, _getUserInfo)
   },
 
